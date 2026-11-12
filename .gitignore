@@ -1,0 +1,23 @@
+# IDE
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Build cache
+.cache/
+build/
+
+# AI models
+*.onnx
+*.engine
+*.pt
+*.pth
+*.bin
+
+# Environment secrets
+.env
+.env.*

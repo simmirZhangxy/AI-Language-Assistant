@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+# Usage: ./devel/devel.sh init | ./devel/devel.sh build | ./devel/devel.sh shell
+services:
+  zephyr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pico-sense:devel
+    working_dir: /work
+    volumes:
+      - ..:/work
+    stdin_open: true
+    tty: true
