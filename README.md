@@ -1,15 +1,16 @@
 # Ventuno
 
-本仓库包含两个相对独立的项目：**VENTUNO Q 上的离线语音助手**（Arduino App Lab + Kokoro TTS），以及 **Pico Sense**（Zephyr / RP2350 固件）。
+一个 Git 仓库，按服务分目录。各服务只改自己的目录。
 
-> **克隆后通常不能开箱即用。** 大模型权重、平台运行时和部分工具链未随 Git 提交，请按下方说明补齐依赖。
+| 服务 | 放在 | 跑在 |
+|------|------|------|
+| 语音 + 本地 LLM（App Lab） | [`Keyword-ASR-Local-LLM-Kokoro-TTS/keyword-asr-local-llm-kokoro-tts/`](Keyword-ASR-Local-LLM-Kokoro-TTS/keyword-asr-local-llm-kokoro-tts/) | VENTUNO Q / Arduino App Lab |
+| 达妙电机（USB2FDCAN + J4310） | [`services/damiao-motor/`](services/damiao-motor/) | 板子上的 Docker 或本机 Python |
+| Pico 固件 | [`pico_sense/`](pico_sense/) | Pico 2 |
 
-## 仓库结构
+公共脚本在 [`scripts/`](scripts/)。达妙完整资料树、可选 SDK 副本放本地 `damiao/`、`third_party/`（已 gitignore，不提交）。
 
-| 目录 | 说明 | 详细文档 |
-|------|------|----------|
-| [`Keyword-ASR-Local-LLM-Kokoro-TTS/keyword-asr-local-llm-kokoro-tts/`](Keyword-ASR-Local-LLM-Kokoro-TTS/keyword-asr-local-llm-kokoro-tts/) | 唤醒词 → ASR → 本地 LLM → Kokoro TTS，含 LED 动效固件 | [README](Keyword-ASR-Local-LLM-Kokoro-TTS/keyword-asr-local-llm-kokoro-tts/README.md) |
-| [`pico_sense/`](pico_sense/) | Pico 2 USB 音频 / 显示 / 触控演示固件 | [README](pico_sense/README.md) · [Windows](pico_sense/README-Windows.md) |
+> 克隆后 Kokoro 权重不在 Git 里，见下方「语音助手」。电机运行文件在 `services/damiao-motor/vendor/`。
 
 ## 为什么 `git clone` 后缺文件？
 
@@ -81,6 +82,18 @@ cd pico_sense
 ```
 
 完整步骤：[pico_sense/README.md](pico_sense/README.md)。
+
+### 3. 达妙电机（Ubuntu 板 + USB2FDCAN + J4310）
+
+克隆后 **`services/damiao-motor/vendor/`** 已包含 aarch64 `libdmcan.so`、Python wheel 与 `damiao.py`。若缺失，在仓库根目录执行：
+
+```bash
+./scripts/download-damiao-sdk.sh
+```
+
+板子上按 [services/damiao-motor/README.md](services/damiao-motor/README.md)：udev → `dev_sn.py` → `env.example` → `run_j4310_demo.py` 或 `docker compose up --build`。
+
+大型官方 SDK 树可放在本地 **`third_party/`** 或 **`damiao/`**（已在 `.gitignore` 中，不提交）。
 
 ## 常见问题
 

@@ -1,0 +1,10 @@
+services:
+  damiao-motor:
+    build: .
+    privileged: true
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    env_file:
+      - path: .env
+        required: true
+    restart: "no"

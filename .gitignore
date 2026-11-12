@@ -11,7 +11,7 @@ venv/
 .cache/
 build/
 
-# AI models
+# AI models (download via scripts/download-kokoro-models.sh)
 *.onnx
 *.engine
 *.pt
@@ -21,3 +21,14 @@ build/
 # Environment secrets
 .env
 .env.*
+
+# Damiao catalog (PDFs / links only — not needed to run motors)
+damiao/
+
+# Optional full SDK trees on disk (canonical runnable bundle: services/damiao-motor/vendor/)
+third_party/
+
+# Windows / macOS / NuGet blobs (never needed on VENTUNO Q aarch64)
+*.dll
+*.dylib
+*.nupkg
