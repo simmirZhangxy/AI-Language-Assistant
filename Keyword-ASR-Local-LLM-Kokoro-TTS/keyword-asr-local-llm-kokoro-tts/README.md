@@ -7,7 +7,7 @@ A fully offline, privacy-first voice assistant built with Arduino App Lab for th
 This project follows the standard Arduino App Lab multi-language architecture, with the addition of a custom module directory:
 
 * `app.yaml`: Main application configuration.
-* `assets/bricks/kokoro_tts/`: **Custom Brick module** integrating the Kokoro Text-to-Speech engine.
+* `bricks/kokoro_tts/`: **Custom Brick module** integrating the Kokoro Text-to-Speech engine.
 * `python/main.py`: The core Python backend managing the AI models, state machine, and hardware orchestration.
 * `sketch/sketch.ino`: The C++ firmware handling the hardware-level LED matrix animations.
 * `sketch/sketch.yaml`: Microcontroller build configuration.
@@ -16,7 +16,7 @@ This project follows the standard Arduino App Lab multi-language architecture, w
 
 This application takes full advantage of the **Custom Bricks** feature. 
 
-Since the advanced Kokoro TTS model is not part of the standard built-in Bricks library, it is bundled directly into the project under the `assets/bricks/` directory. This allows the Python backend to seamlessly import and utilize the `KokoroTTS` class just like any native component (`from kokoro_tts import KokoroTTS`), demonstrating how developers can extend the Arduino App Lab ecosystem with their own state-of-the-art AI models.
+Since the advanced Kokoro TTS model is not part of the standard built-in Bricks library, it is bundled directly into the project under the `bricks/` directory. This allows the Python backend to seamlessly import and utilize the `KokoroTTS` class just like any native component (`from kokoro_tts import KokoroTTS`), demonstrating how developers can extend the Arduino App Lab ecosystem with their own state-of-the-art AI models.
 
 ## Bricks Used
 
@@ -51,3 +51,24 @@ The UI provides instant visual feedback based on the AI's state:
 
 * USB Microphone (Connected to USB-A)
 * USB Headset/Speaker (Connected to USB-A. Note: `main.py` maps the output explicitly to ALSA card 1, device 0).
+
+## Clone & dependencies (read this first)
+
+A fresh `git clone` does **not** include large AI weight files (see the repo root [`.gitignore`](../../.gitignore)). You must supply Kokoro assets locally before the Custom Brick container can build or run.
+
+| What | In Git? | How to obtain |
+|------|---------|---------------|
+| Kokoro ONNX + voices | No | `bricks/kokoro_tts/container/models/kokoro-v1.0.fp16.onnx`, `voices-v1.0.bin` — run `../../scripts/download-kokoro-models.sh` from the repo root, or follow [Ventuno README](../../README.md) |
+| LLM / Whisper / wake word (in `app.yaml`) | No | Provided by **Arduino App Lab** on VENTUNO Q when you deploy the app |
+| Kokoro container Python packages | Yes (pinned in Dockerfile) | `bricks/kokoro_tts/container/requirements.txt` — installed at image build time |
+
+**Platform:** VENTUNO Q + Arduino App Lab. Open this directory as the App Lab project and deploy per Arduino’s workflow.
+
+**Verify models:**
+
+```bash
+ls -lh bricks/kokoro_tts/container/models/kokoro-v1.0.fp16.onnx \
+       bricks/kokoro_tts/container/models/voices-v1.0.bin
+```
+
+For the full monorepo layout (including `pico_sense`), see the [repository root README](../../README.md).
