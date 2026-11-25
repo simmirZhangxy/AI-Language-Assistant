@@ -1,0 +1,13 @@
+services:
+  damiao-motor:
+    build:
+      context: ..
+      dockerfile: devel/Dockerfile
+    image: damiao-motor:devel
+    container_name: damiao-motor
+    privileged: true
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    env_file:
+      - path: ../.env
+        required: true

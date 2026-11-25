@@ -1,0 +1,6 @@
+devel/
+udev/
+.env
+.env.*
+README.md
+.env.example

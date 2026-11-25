@@ -268,8 +268,8 @@ class Motor_Control:
         *,
         device_index: int = 0,
         device_type: Optional[dmcan_device_type] = None,
-        canfd: bool = True,
-        brs: bool = True,
+        canfd: bool = False,
+        brs: bool = False,
         auto_enable: bool = True,
         set_baudrate: bool = True,
         can_sp: float = 0.75,
@@ -317,10 +317,14 @@ class Motor_Control:
         channels = self._registered_channels()
         if not channels:
             channels = {0}
-        for ch in channels:
-            if set_baudrate:
-                self._set_channel_baudrate(ch, self.nom_baud, self.dat_baud, can_sp, canfd_sp)
+        # v1.1 示例：双路设备两路都打开，并且先 enable 再写波特率。
+        for ch in sorted(channels):
             self.device.enable_channel(ch, True)
+            if set_baudrate:
+                ok = self._set_channel_baudrate(ch, self.nom_baud, self.dat_baud, can_sp, canfd_sp)
+                print(f"channel {ch} baudrate set: {ok}", flush=True)
+                if not ok:
+                    raise RuntimeError(f"channel {ch} baudrate set failed")
         # 注册接收回调函数
         self.device.hook_recv_callback(self.canframeCallback)
         time.sleep(0.05)
@@ -368,7 +372,7 @@ class Motor_Control:
         info.canfd_baudrate = dat_baud
         info.can_sp = can_sp
         info.canfd_sp = canfd_sp
-        self.device.set_channel_baudrate(channel, info)
+        return self.device.set_channel_baudrate(channel, info)
 
     def _send(self, channel: int, can_id: int, payload, *, canfd: Optional[bool] = None, brs: Optional[bool] = None) -> bool:
         data = bytes(payload)

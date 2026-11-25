@@ -85,13 +85,13 @@ cd pico_sense
 
 ### 3. 达妙电机（Ubuntu 板 + USB2FDCAN + J4310）
 
-克隆后 **`services/damiao-motor/vendor/`** 已包含 aarch64 `libdmcan.so`、Python wheel 与 `damiao.py`。若缺失，在仓库根目录执行：
+克隆后 **`services/damiao-motor/`** 已包含 aarch64 `dlls/libdm_device.so`（SDK 1.0.4，经典 CAN 2.0 / 1 Mbps）和 `vendor/`。若缺失，在仓库根目录执行：
 
 ```bash
 ./scripts/download-damiao-sdk.sh
 ```
 
-板子上按 [services/damiao-motor/README.md](services/damiao-motor/README.md)：udev → `dev_sn.py` → `env.example` → `run_j4310_demo.py` 或 `docker compose up --build`。
+板子上按 [services/damiao-motor/README.md](services/damiao-motor/README.md)：`devel/` 里 `docker compose up -d`，再 `exec` 进容器跑 demo。
 
 大型官方 SDK 树可放在本地 **`third_party/`** 或 **`damiao/`**（已在 `.gitignore` 中，不提交）。
 

@@ -5,8 +5,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VENDOR="${ROOT}/services/damiao-motor/vendor"
-LIB_DST="${VENDOR}/lib/linux-aarch64/libdmcan.so"
-WHEEL_DST="${VENDOR}/wheels/dmcan_sdk-2.1.1-py3-none-any.whl"
+LIB_DST="${ROOT}/services/damiao-motor/dlls/libdm_device.so"
+WHEEL_DST="${VENDOR}/wheels/dmcan_sdk-1.0.4-py3-none-any.whl"
 PY_DST="${VENDOR}/python"
 
 need_fetch=0
@@ -38,10 +38,12 @@ clone_repo "https://gitee.com/kit-miao/motor-sdk.git" "${TMP}/motor-sdk"
 
 mkdir -p "$(dirname "$LIB_DST")" "${VENDOR}/wheels" "$PY_DST"
 
-cp "${TMP}/dm-device-sdk/C&C++/lib/v2.1.0/linux/arm64/libdmcan.so" "$LIB_DST"
-cp "${TMP}/dm-device-sdk/Python/pack/dmcan_sdk-2.1.1-py3-none-any.whl" "$WHEEL_DST"
-cp "${TMP}/motor-sdk/Python例程/u2canfd/damiao.py" \
-   "${TMP}/motor-sdk/Python例程/u2canfd/dev_sn.py" \
-   "$PY_DST/"
+cp "${TMP}/dm-device-sdk/C&C++/lib/v1.1.0/linux/arm64/libdm_device.so" "$LIB_DST"
+cp "${TMP}/dm-device-sdk/Python/pack/dmcan_sdk-1.0.4-py3-none-any.whl" "$WHEEL_DST"
+# damiao.py 在仓库里有本地修改（先开通道再设波特率）。缺文件时才从上游补。
+if [[ ! -f "${PY_DST}/damiao.py" ]]; then
+  cp "${TMP}/motor-sdk/Python例程/u2canfd/damiao.py" "${PY_DST}/damiao.py"
+fi
+cp "${TMP}/motor-sdk/Python例程/u2canfd/dev_sn.py" "${PY_DST}/dev_sn.py"
 
 echo "Installed vendor bundle under ${VENDOR}"
